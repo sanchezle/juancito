@@ -11,37 +11,22 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 app = Flask(__name__)
 CORS(app)
 
-    # System message setting the chatbot's role and behavior
+def get_chat_response(messages, model="gpt-3.5-turbo", temperature=0):
+    # Prepend the system message to the conversation
+    system_message = {
+        "role": "system",
+        "content": "You are a chatbot that assists with Spanish language learning. Be friendly, helpful, and provide clear and concise answers. always greet with message --- hola!! soy juancito vamos a hablar español"
+    }
+    messages_with_system = [system_message] + messages
+    
+    formatted_messages = [{"role": msg["role"], "content": msg["content"]} for msg in messages_with_system]
 
-
-def get_completion(prompt, model="gpt-3.5-turbo"):  # Update model as needed
-    response = openai.Completion.create(
+    response = openai.ChatCompletion.create(
         model=model,
-        prompt=prompt,
-        max_tokens=150,
-        temperature=0
-    )
-    return response.choices[0].text.strip()
-
-def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0):
-
-
-    # System message setting the chatbot's role and behavior
-    system_message =  """
-        You are a Spanish teaching bot. Your primary function is to teach Spanish in an interactive and engaging way. \
-        You should correct mistakes gently, provide explanations for grammatical concepts, and encourage the user to practice. \
-        Use simple and clear language suitable for language learners. \
-        """ 
-    # Concatenate the messages to form a single prompt
-    conversation = system_message + "\n".join([f"{message['role'].capitalize()}: {message['content']}" for message in messages])
-
-    response = openai.Completion.create(
-        model=model,
-        prompt=conversation,
-        max_tokens=150,
+        messages=formatted_messages,
         temperature=temperature
     )
-    return response.choices[0].text.strip()
+    return response.choices[0].message["content"]
 
 @app.route('/juancito', methods=['POST'])
 def chat():
@@ -55,7 +40,7 @@ def chat():
     # Add the user's message to the context
     context.append({"role": "user", "content": user_message})
 
-    response_message = get_completion_from_messages(context, model="gpt-3.5-turbo", temperature=0)
+    response_message = get_chat_response(context, model="gpt-3.5-turbo", temperature=0)
     
     # Add the response to the context
     context.append({"role": "assistant", "content": response_message})
