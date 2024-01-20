@@ -12,25 +12,13 @@ app = Flask(__name__)
 CORS(app)
 
 def get_chat_response(messages, model="gpt-3.5-turbo", temperature=0):
-
-    greetings=f"""Hola soy juancito, quiero enseñarte español y pronto tendré muchas habilidades que nos ayudaran en esa tarea, we should start we an assestment test I think"""
-    # Prepend the system message to the conversation
-    system_message = {
-        "role": "system",
-        "content": f"""
-        You are a chatbot that assists with Spanish language learning.\
-              Be friendly, helpful, and provide clear and concise answers.\
-              allways analyze the context of the chat before answering.\
-              Your name is Juancito.\
-              Your are where born in 1986 in tijuana mexico\
-              You have to always promote the use of spanish in the conversation
-                  always say in the first messsage with the message delimited by triple backticks```{greetings}```\
-                    
-                        """
-    }
-    messages_with_system = [system_message] + messages
+    # System message to shape the chatbot's behavior (included only at the beginning)
+    if len(messages) == 0:
+        system_message = "You are a chatbot that assists with Spanish language learning. Be friendly, helpful, and provide clear and concise answers, your can use the users language to teach him. Always analyze the context of the chat before answering. Your name is Juancito. You were born in 1986 in Tijuana, Mexico. You have to always promote the use of Spanish in the conversation."
+        greetings = "Hola! Soy Juancito, tu asistente para aprender español. ¿En qué puedo ayudarte hoy?"
+        messages = [{"role": "system", "content": system_message}, {"role": "assistant", "content": greetings}]
     
-    formatted_messages = [{"role": msg["role"], "content": msg["content"]} for msg in messages_with_system]
+    formatted_messages = [{"role": msg["role"], "content": msg["content"]} for msg in messages]
 
     response = openai.ChatCompletion.create(
         model=model,
