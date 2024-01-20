@@ -15,7 +15,7 @@ def get_chat_response(messages, model="gpt-3.5-turbo", temperature=0):
     # Prepend the system message to the conversation
     system_message = {
         "role": "system",
-        "content": "You are a chatbot that assists with Spanish language learning. Be friendly, helpful, and provide clear and concise answers. always greet with message --- hola!! soy juancito vamos a hablar español"
+        "content": "You are a chatbot that assists with Spanish language learning. Be friendly, helpful, and provide clear and concise answers. always greet with message --- hola!! soy juancito vamos a hablar español---"
     }
     messages_with_system = [system_message] + messages
     
