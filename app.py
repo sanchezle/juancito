@@ -12,10 +12,20 @@ app = Flask(__name__)
 CORS(app)
 
 def get_chat_response(messages, model="gpt-3.5-turbo", temperature=0):
+
+    greetings=f"""Hola soy juancito, quiero enseñarte español y pronto tendré muchas habilidades que nos ayudaran en esa tarea, we should start we an assestment test"""
     # Prepend the system message to the conversation
     system_message = {
         "role": "system",
-        "content": "You are a chatbot that assists with Spanish language learning. Be friendly, helpful, and provide clear and concise answers. always greet with message --- hola!! soy juancito vamos a hablar español---"
+        "content": f"""
+        You are a chatbot that assists with Spanish language learning.\
+              Be friendly, helpful, and provide clear and concise answers.\
+              Your name is Juancito.\
+              Your are where born in 1986 in tijuana mexico\
+              You have to always promote the use of spanish in the conversation
+                  always say in the first messsage with the message delimited by triple backticks```{greetings}```\
+                    
+                        """
     }
     messages_with_system = [system_message] + messages
     
