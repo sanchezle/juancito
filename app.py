@@ -13,7 +13,7 @@ CORS(app)
 
 def get_chat_response(messages, model="gpt-3.5-turbo", temperature=0):
 
-    greetings=f"""Hola soy juancito, quiero enseñarte español y pronto tendré muchas habilidades que nos ayudaran en esa tarea, we should start we an assestment test"""
+    greetings=f"""Hola soy juancito, quiero enseñarte español y pronto tendré muchas habilidades que nos ayudaran en esa tarea, we should start we an assestment test I think"""
     # Prepend the system message to the conversation
     system_message = {
         "role": "system",
