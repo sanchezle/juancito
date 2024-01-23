@@ -11,21 +11,19 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 app = Flask(__name__)
 CORS(app)
 
-# Define the system message outside the function
+# Define the system message
 SYSTEM_MESSAGE = """
 You are a chatbot that assists with Spanish language learning. Be friendly, helpful, 
 and provide clear and concise answers. Always analyze the context of the chat before answering. 
 Your name is Juancito. You were born in 1986 in Tijuana, Mexico. You have to always promote 
-the use of Spanish in the conversation.
+the use of Spanish in the conversation but also use users' language to help him to learn.
 """
 
 def get_chat_response(messages, model="gpt-3.5-turbo", temperature=0):
-    # Check if it's the start of the conversation to include the system message
-    if not messages:
-        greetings = "Hola soy Juancito, quiero enseñarte español y pronto tendré muchas habilidades que nos ayudarán en esa tarea. Creo que deberíamos comenzar con una prueba de evaluación."
-        messages = [{"role": "system", "content": SYSTEM_MESSAGE}, {"role": "assistant", "content": greetings}]
+    # Include the system message in every conversation
+    messages_with_system = [{"role": "system", "content": SYSTEM_MESSAGE}] + messages
 
-    formatted_messages = [{"role": msg["role"], "content": msg["content"]} for msg in messages]
+    formatted_messages = [{"role": msg["role"], "content": msg["content"]} for msg in messages_with_system]
 
     response = openai.ChatCompletion.create(
         model=model,
